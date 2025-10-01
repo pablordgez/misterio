@@ -10,10 +10,10 @@ import { FormsModule } from '@angular/forms';
 export class Inverter {
   checked: boolean = false;
 
-  @Output() inversionChange = new EventEmitter<boolean>();
+  @Output() stateChange = new EventEmitter<boolean>();
 
   toggleInversion() {
-    this.inversionChange.emit(this.checked);
+    this.stateChange.emit(this.checked);
   }
 
 }

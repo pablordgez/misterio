@@ -1,4 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewContainerRef, ViewChild, Type, ComponentRef } from '@angular/core';
+import { RotatorFilter } from '../filters/rotatorFilter';
+import { MachinePart } from '../machine/machinePart';
+import { Advancer } from '../advancer/advancer';
+import { Inverter } from '../inverter/inverter';
 
 @Component({
   selector: 'app-rotator',
@@ -6,58 +10,44 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   templateUrl: './rotator.html',
   styleUrl: './rotator.css'
 })
-export class Rotator {
-  rotatedText: string = '';
-  regularText: string = '';
-  value: number = 0;
-  advancerValue: number = 0;
+export class Rotator implements MachinePart {
   Math = Math;
+  filter : RotatorFilter = new RotatorFilter();
+  rotation: number = 0;
+  @ViewChild('inverterContainer', { read: ViewContainerRef, static: true }) inverterContainer!: ViewContainerRef;
+  @ViewChild('advancerContainer', { read: ViewContainerRef, static: true }) advancerContainer!: ViewContainerRef;
 
-  alphabet : string = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-  @Input() set text(value: string) {
-    this.regularText = value;
-    this.rotatedText = this.rotateText();
-    this.textChange.emit(this.rotatedText);
+  getFilter(): Filter {
+    return this.filter;
   }
 
-  @Input() set advancer(value: number) {
-    this.advancerValue = value;
-    this.rotatedText = this.rotateText();
-    this.textChange.emit(this.rotatedText);
+  @Output() stateChange = new EventEmitter<void>();
+
+  onInverterChange(isInverted: boolean) {
+    this.rotation = this.rotation * -1;
+    this.filter.setRotation(this.rotation);
+    this.stateChange.emit();
   }
 
-  @Input() set inverted(isInverted: boolean) {
-    this.value = isInverted ? -Math.abs(this.value) : Math.abs(this.value);
-    this.rotatedText = this.rotateText();
-    this.textChange.emit(this.rotatedText);
+  onAdvancerChange(advancer: number) {
+    this.filter.setAdvancer(advancer);
+    this.stateChange.emit();
   }
 
-  @Output() textChange = new EventEmitter<string>();
-
-  rotateText() : string {
-    let rotatedText: string = '';
-    let shift: number = 0;
-    for (let i = 0; i < this.regularText.length; i++) {
-      const char = this.regularText[i];
-      const index = this.alphabet.indexOf(char.toLowerCase());
-      if(index !== -1) {
-        let newIndex = (index + this.value + shift) % this.alphabet.length;
-        if(newIndex < 0) {
-          newIndex += this.alphabet.length;
-        }
-        rotatedText += this.alphabet.charAt(newIndex);
-      }
-      shift += this.advancerValue;
-    }
-    return rotatedText;
+  onSliderChange(event: any) {
+    this.rotation = event.target.value;
+    this.filter.setRotation(this.rotation);
+    this.stateChange.emit();
   }
 
-  onSliderChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.value = Number(target.value);
-    this.rotatedText = this.rotateText();
-    this.textChange.emit(this.rotatedText);
+  addAdvancer(advancer: Type<Advancer>): void {
+    const compRef : ComponentRef<Advancer> = this.advancerContainer.createComponent(advancer);
+    compRef.instance.stateChange.subscribe((state: number) => this.onAdvancerChange(state));
+  }
+
+  addInverter(inverter: Type<Inverter>): void {
+    const compRef : ComponentRef<Inverter> = this.inverterContainer.createComponent(inverter);
+    compRef.instance.stateChange.subscribe((state: boolean) => this.onInverterChange(state));
   }
 
 }

@@ -1,4 +1,6 @@
 import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { NumberifierFilter } from '../filters/numberifierFilter';
+import { MachinePart } from '../machine/machinePart';
 
 @Component({
   selector: 'app-numberifier',
@@ -6,11 +8,16 @@ import { Component, Output, Input, EventEmitter } from '@angular/core';
   templateUrl: './numberifier.html',
   styleUrl: './numberifier.css'
 })
-export class Numberifier {
-  state: string = 'Off';
-  value: number = 1;
+export class Numberifier implements MachinePart {
+  stateText: string = 'Off';
+  state: number = 1;
   alphabet: string = 'abcdefghijklmnopqrstuvwxyz';
   regularText: string = '';
+  filter : NumberifierFilter = new NumberifierFilter();
+
+  getFilter(): Filter {
+    return this.filter;
+  }
   
   states: Record<number, string> = {
     0: 'Disabled',
@@ -19,55 +26,14 @@ export class Numberifier {
   }
 
   onSliderChange(event: any) {
-    this.value = Number(event.target.value);
-    this.state = this.states[this.value];
-    this.stateChange.emit(
-      this.value === 0 ? this.unNumberifyText(this.regularText) :
-      this.value === 1 ? this.regularText : this.numberifyText(this.regularText)
-    );
+    this.state = event.target.value;
+    this.stateText = this.states[this.state];
+    this.filter.setState(this.state);
+    this.stateChange.emit();
   }
 
-  @Output() stateChange = new EventEmitter<string>();
+  @Output() stateChange: EventEmitter<void> = new EventEmitter<void>();
 
-  numberifyText(text: string) : string{
-    let outputText: string = '';
-    for(let i = 0; i < text.length; i++){
-      const char = text[i];
-      if(!isNaN(parseInt(char))){
-        outputText += char;
-      }
-      else{
-        const index = this.alphabet.indexOf(char.toLowerCase());
-        if(index !== -1){
-          outputText += (index + 1).toString();
-        }
-      }
-    }
-    return outputText;
-  }
 
-  unNumberifyText(text: string) : string{
-    let outputText: string = '';
-    for(let i = 0; i < text.length; i++){
-      const char = text[i];
-      if(!isNaN(parseInt(char))){
-        const index = parseInt(char);
-        if(index >= 0 && index < this.alphabet.length){
-          outputText += this.alphabet.charAt(index);
-        }
-      } else {
-        outputText += char;
-      }
-    }
-    return outputText;
-  }
-
-  @Input() set text(value: string) {
-    this.regularText = value;
-    this.stateChange.emit(
-      this.value === 0 ? this.unNumberifyText(value) :
-      this.value === 1 ? value : this.numberifyText(value)
-    );
-  }
 
 }

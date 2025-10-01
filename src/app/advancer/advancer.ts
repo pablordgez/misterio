@@ -9,12 +9,17 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class Advancer {
   value: number = 0;
 
-  @Output() valueChange = new EventEmitter<number>();
+  @Output() stateChange = new EventEmitter<number>();
   
   onSliderChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.value = Number(target.value);
-    this.valueChange.emit(this.value);
+    this.stateChange.emit(this.value);
+  }
+
+  onInverterChange(isInverted: boolean) {
+    this.value = this.value * -1;
+    this.stateChange.emit(this.value);
   }
 
 }

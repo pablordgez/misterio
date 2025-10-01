@@ -1,8 +1,4 @@
 
 <input type="text" placeholder="Enter something..." [(ngModel)]="text" (ngModelChange)="onTextChange($event)">
-<app-rotator [text]="text" [advancer]="advancerValue" [inverted]="isRotatorInverted" (textChange)="onRotatedTextChange($event)"></app-rotator>
-<app-advancer (valueChange)="onAdvancerValueChange($event)"></app-advancer>
-<app-inverter (inversionChange)="onRotatorInversionChange($event)"></app-inverter>
-<app-inverter (inversionChange)="onAdvancerInversionChange($event)"></app-inverter>
-<app-numberifier [text]="rotatedText" (stateChange)="onNumberifierStateChange($event)"></app-numberifier>
-<p>Ciphertext: {{numberifiedText}}</p>
+<ng-container #partsContainer></ng-container>
+<p>Ciphertext: {{ciphertext}}</p>

@@ -1,52 +1,39 @@
-import { Component } from '@angular/core';
-import { Rotator } from "../rotator/rotator";
+import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Advancer } from "../advancer/advancer";
-import { Inverter } from "../inverter/inverter";
-import { Numberifier } from "../numberifier/numberifier";
+import { MachineFilterChain } from './machineFilterChain';
+import { MachinePart } from './machinePart';
 
 @Component({
   selector: 'app-machine',
-  imports: [Rotator, FormsModule, Advancer, Inverter, Numberifier],
+  imports: [FormsModule],
   templateUrl: './machine.html',
   styleUrl: './machine.css'
 })
 export class Machine {
-  components = [];
   isHidden = false;
-  advancerValue: number = 0;
   text: string = '';
-  isRotatorInverted: boolean = false;
-  rotatedText: string = '';
-  numberifiedText: string = '';
+  ciphertext: string = '';
+  machineFilterChain: MachineFilterChain = new MachineFilterChain();
+  @ViewChild('partsContainer', { read: ViewContainerRef, static: true })
+  container!: ViewContainerRef;
 
-  onTextChange(value: string) {
-    this.text = value;
-  }
-  
-  onRotatedTextChange(value: string) {
-    this.rotatedText = value;
+  onPartChange(){
+    this.processText();
   }
 
-  onAdvancerValueChange(value: number) {
-    this.advancerValue = value;
+  onTextChange(text: string): void {
+    this.text = text;
+    this.processText();
   }
 
-  onRotatorInversionChange(isInverted: boolean) {
-    this.isRotatorInverted = isInverted;
+  addPart<T extends MachinePart>(part: Type<T>): MachinePart {
+    const compRef : ComponentRef<T> = this.container.createComponent(part);
+    compRef.instance.stateChange.subscribe(() => this.onPartChange());
+    this.machineFilterChain.addFilter(compRef.instance.getFilter());
+    return compRef.instance;
   }
 
-  onAdvancerInversionChange(isInverted: boolean) {
-    if(isInverted) {
-      this.advancerValue = -Math.abs(this.advancerValue);
-    } else {
-      this.advancerValue = Math.abs(this.advancerValue);
-    }
+  processText(): void {
+    this.ciphertext = this.machineFilterChain.applyFilters(this.text);
   }
-
-  onNumberifierStateChange(value: string) {
-    this.numberifiedText = value;
-  }
-
-
 }
