@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Machine } from "./machine/machine";
 import { Rotator } from './rotator/rotator';
@@ -18,12 +18,21 @@ export class App {
   @ViewChild('machineContainer', { read: ViewContainerRef, static: true })
   container!: ViewContainerRef;
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ngAfterViewInit() {
     const compRef = this.container.createComponent(Machine);
     this.machine = compRef.instance;
     let rotator : Rotator = this.machine.addPart(Rotator) as Rotator;
+    
+    this.cdr.detectChanges();
+    
+    let advancer : Advancer = rotator.addAdvancer(Advancer);
     rotator.addInverter(Inverter);
-    rotator.addAdvancer(Advancer);
+    
+    this.cdr.detectChanges();
+    
+    advancer.addInverter(Inverter);
     this.machine.addPart(Numberifier);
   }
 

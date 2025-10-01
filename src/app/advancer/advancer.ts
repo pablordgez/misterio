@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, ComponentRef, EventEmitter, Output, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Inverter } from '../inverter/inverter';
 
 @Component({
   selector: 'app-advancer',
@@ -7,7 +8,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './advancer.css'
 })
 export class Advancer {
+  Math = Math;
   value: number = 0;
+  @ViewChild('inverterContainer', { read: ViewContainerRef, static: false }) inverterContainer!: ViewContainerRef;
 
   @Output() stateChange = new EventEmitter<number>();
   
@@ -17,9 +20,14 @@ export class Advancer {
     this.stateChange.emit(this.value);
   }
 
-  onInverterChange(isInverted: boolean) {
+  onInverterChange() {
     this.value = this.value * -1;
     this.stateChange.emit(this.value);
   }
 
+  addInverter(inverter: Type<Inverter>): Inverter {
+    const compRef : ComponentRef<Inverter> = this.inverterContainer.createComponent(inverter);
+    compRef.instance.stateChange.subscribe((state: boolean) => this.onInverterChange());
+    return compRef.instance;
+  }
 }

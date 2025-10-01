@@ -14,8 +14,10 @@ export class Rotator implements MachinePart {
   Math = Math;
   filter : RotatorFilter = new RotatorFilter();
   rotation: number = 0;
-  @ViewChild('inverterContainer', { read: ViewContainerRef, static: true }) inverterContainer!: ViewContainerRef;
-  @ViewChild('advancerContainer', { read: ViewContainerRef, static: true }) advancerContainer!: ViewContainerRef;
+  @ViewChild('inverterContainer', { read: ViewContainerRef, static: false }) inverterContainer!: ViewContainerRef;
+  @ViewChild('advancerContainer', { read: ViewContainerRef, static: false }) advancerContainer!: ViewContainerRef;
+  pendingInverters: Type<Inverter>[] = [];
+  pendingAdvancers: Type<Advancer>[] = [];
 
   getFilter(): Filter {
     return this.filter;
@@ -23,7 +25,7 @@ export class Rotator implements MachinePart {
 
   @Output() stateChange = new EventEmitter<void>();
 
-  onInverterChange(isInverted: boolean) {
+  onInverterChange() {
     this.rotation = this.rotation * -1;
     this.filter.setRotation(this.rotation);
     this.stateChange.emit();
@@ -40,14 +42,16 @@ export class Rotator implements MachinePart {
     this.stateChange.emit();
   }
 
-  addAdvancer(advancer: Type<Advancer>): void {
+  addAdvancer(advancer: Type<Advancer>): Advancer {
     const compRef : ComponentRef<Advancer> = this.advancerContainer.createComponent(advancer);
     compRef.instance.stateChange.subscribe((state: number) => this.onAdvancerChange(state));
+    return compRef.instance;
   }
 
-  addInverter(inverter: Type<Inverter>): void {
+  addInverter(inverter: Type<Inverter>): Inverter {
     const compRef : ComponentRef<Inverter> = this.inverterContainer.createComponent(inverter);
-    compRef.instance.stateChange.subscribe((state: boolean) => this.onInverterChange(state));
+    compRef.instance.stateChange.subscribe((state: boolean) => this.onInverterChange());
+    return compRef.instance;
   }
 
 }
