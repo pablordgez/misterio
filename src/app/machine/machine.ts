@@ -3,10 +3,11 @@ import { Rotator } from "../rotator/rotator";
 import { FormsModule } from '@angular/forms';
 import { Advancer } from "../advancer/advancer";
 import { Inverter } from "../inverter/inverter";
+import { Numberifier } from "../numberifier/numberifier";
 
 @Component({
   selector: 'app-machine',
-  imports: [Rotator, FormsModule, Advancer, Inverter],
+  imports: [Rotator, FormsModule, Advancer, Inverter, Numberifier],
   templateUrl: './machine.html',
   styleUrl: './machine.css'
 })
@@ -17,6 +18,7 @@ export class Machine {
   text: string = '';
   isRotatorInverted: boolean = false;
   rotatedText: string = '';
+  numberifiedText: string = '';
 
   onTextChange(value: string) {
     this.text = value;
@@ -40,6 +42,10 @@ export class Machine {
     } else {
       this.advancerValue = Math.abs(this.advancerValue);
     }
+  }
+
+  onNumberifierStateChange(value: string) {
+    this.numberifiedText = value;
   }
 
 

@@ -4,4 +4,5 @@
 <app-advancer (valueChange)="onAdvancerValueChange($event)"></app-advancer>
 <app-inverter (inversionChange)="onRotatorInversionChange($event)"></app-inverter>
 <app-inverter (inversionChange)="onAdvancerInversionChange($event)"></app-inverter>
-<p>Ciphertext: {{rotatedText}}</p>
+<app-numberifier [text]="rotatedText" (stateChange)="onNumberifierStateChange($event)"></app-numberifier>
+<p>Ciphertext: {{numberifiedText}}</p>
