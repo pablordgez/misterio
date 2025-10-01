@@ -51,7 +51,7 @@ export class Numberifier {
     for(let i = 0; i < text.length; i++){
       const char = text[i];
       if(!isNaN(parseInt(char))){
-        const index = parseInt(char) - 1;
+        const index = parseInt(char);
         if(index >= 0 && index < this.alphabet.length){
           outputText += this.alphabet.charAt(index);
         }
