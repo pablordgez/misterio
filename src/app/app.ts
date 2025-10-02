@@ -5,6 +5,8 @@ import { Rotator } from './rotator/rotator';
 import { Numberifier } from './numberifier/numberifier';
 import { Advancer } from './advancer/advancer';
 import { Inverter } from './inverter/inverter';
+import { Repeater } from './repeater/repeater';
+import { RepeaterShifter } from './repeater-shifter/repeater-shifter';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +36,9 @@ export class App {
     
     advancer.addInverter(Inverter);
     this.machine.addPart(Numberifier);
+    let repeater : Repeater = this.machine.addPart(Repeater) as Repeater;
+    this.cdr.detectChanges();
+    repeater.addShifter(RepeaterShifter);
   }
 
 }
