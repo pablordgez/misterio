@@ -1,0 +1,15 @@
+.machine {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 1.3rem;
+}
+
+.machine input{
+    font-size: 1.3rem;
+    margin: 0 auto;
+}
+
+.revealContainer{
+    width: 100%;
+}

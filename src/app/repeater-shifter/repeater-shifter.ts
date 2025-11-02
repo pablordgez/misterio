@@ -8,6 +8,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 })
 export class RepeaterShifter {
   position: number = 1;
+  maxPosition: number = 3;
 
   onPositionChange(event: any) {
     this.position = event.target.value;

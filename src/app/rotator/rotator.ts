@@ -12,12 +12,11 @@ import { Inverter } from '../inverter/inverter';
 })
 export class Rotator implements MachinePart {
   Math = Math;
-  filter : RotatorFilter = new RotatorFilter();
   rotation: number = 0;
   @ViewChild('inverterContainer', { read: ViewContainerRef, static: false }) inverterContainer!: ViewContainerRef;
   @ViewChild('advancerContainer', { read: ViewContainerRef, static: false }) advancerContainer!: ViewContainerRef;
-  pendingInverters: Type<Inverter>[] = [];
-  pendingAdvancers: Type<Advancer>[] = [];
+  maxRotation: number = 72;
+  filter : RotatorFilter = new RotatorFilter(this.maxRotation);
 
   getFilter(): Filter {
     return this.filter;
@@ -45,6 +44,8 @@ export class Rotator implements MachinePart {
   addAdvancer(advancer: Type<Advancer>): Advancer {
     const compRef : ComponentRef<Advancer> = this.advancerContainer.createComponent(advancer);
     compRef.instance.stateChange.subscribe((state: number) => this.onAdvancerChange(state));
+    this.filter.setHasAdvancer(true);
+    this.filter.setMaxAdvancer(compRef.instance.maxValue);
     return compRef.instance;
   }
 
@@ -53,5 +54,4 @@ export class Rotator implements MachinePart {
     compRef.instance.stateChange.subscribe((state: boolean) => this.onInverterChange());
     return compRef.instance;
   }
-
 }

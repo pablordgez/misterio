@@ -13,7 +13,7 @@ export class Numberifier implements MachinePart {
   state: number = 1;
   alphabet: string = 'abcdefghijklmnopqrstuvwxyz';
   regularText: string = '';
-  filter : NumberifierFilter = new NumberifierFilter();
+  
 
   getFilter(): Filter {
     return this.filter;
@@ -24,6 +24,8 @@ export class Numberifier implements MachinePart {
     1: 'Off',
     2: 'Enabled'
   }
+
+  filter : NumberifierFilter = new NumberifierFilter(this.states);
 
   onSliderChange(event: any) {
     this.state = event.target.value;

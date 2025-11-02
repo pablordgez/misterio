@@ -16,4 +16,9 @@ export class Inverter {
     this.stateChange.emit(this.checked);
   }
 
+  randomizeConfiguration(): void {
+    this.checked = Math.random() < 0.5;
+    this.stateChange.emit(this.checked);
+  }
+
 }

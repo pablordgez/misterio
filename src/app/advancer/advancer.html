@@ -1,3 +1,4 @@
-<input type="range" min="0" max="4" [value]="value" (input)="onSliderChange($event)">
+<p>Advancer:</p>
+<input type="range" min="0" max="{{maxValue}}" value="0" (input)="onSliderChange($event)">
 <p>{{Math.abs(value)}}</p>
 <ng-container #inverterContainer></ng-container>

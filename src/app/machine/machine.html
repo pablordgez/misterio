@@ -1,4 +1,6 @@
-
+<div class="machine">
 <input type="text" placeholder="Enter something..." [(ngModel)]="text" (ngModelChange)="onTextChange($event)">
-<ng-container #partsContainer></ng-container>
+<div #partsContainer></div>
 <p>Ciphertext: {{ciphertext}}</p>
+<div #revealContainer class="revealContainer"></div>
+</div>

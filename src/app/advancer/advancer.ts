@@ -11,6 +11,7 @@ export class Advancer {
   Math = Math;
   value: number = 0;
   @ViewChild('inverterContainer', { read: ViewContainerRef, static: false }) inverterContainer!: ViewContainerRef;
+  maxValue: number = 4;
 
   @Output() stateChange = new EventEmitter<number>();
   
@@ -30,4 +31,6 @@ export class Advancer {
     compRef.instance.stateChange.subscribe((state: boolean) => this.onInverterChange());
     return compRef.instance;
   }
+
+
 }

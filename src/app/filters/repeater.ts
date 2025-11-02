@@ -1,6 +1,15 @@
 export class RepeaterFilter implements Filter {
   private selector: number = 0;
   private position: number = 1;
+  private maxSelector: number;
+  private hasShifter: boolean;
+  private maxShifter: number;
+
+  constructor(maxSelector: number){
+      this.maxSelector = maxSelector;
+      this.hasShifter = false;
+      this.maxShifter = 1;
+  }
 
   setSelector(selector: number) {
     this.selector = Number(selector);
@@ -16,7 +25,15 @@ export class RepeaterFilter implements Filter {
   getPosition(): number {
       return this.position;
   }
-  
+
+  setHasShifter(hasShifter: boolean) {
+      this.hasShifter = hasShifter;
+  }
+
+  setMaxShifter(maxShifter: number) {
+      this.maxShifter = maxShifter;
+  }
+
   filter(text: string): string {
         if(this.selector <= 0) return text;
         let output : string = '';
@@ -43,4 +60,16 @@ export class RepeaterFilter implements Filter {
         return output;
     }
 
+    randomizeConfiguration(): void {
+        const randomSelector = Math.floor(Math.random() * (this.maxSelector + 1));
+        this.setSelector(randomSelector);
+        if(this.hasShifter) {
+            const randomPosition = Math.floor(Math.random() * this.maxShifter) + 1;
+            this.setPosition(randomPosition);
+        }
+    }
+
+    toString(): string {
+        return "Repeater: Selector=" + this.selector + ", Shift=" + this.position + "\n";
+    }
 }

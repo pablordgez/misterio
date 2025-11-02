@@ -1,0 +1,7 @@
+.inverter{
+    display: flex;;
+}
+
+.inverter input{
+    margin-top: 0.75rem;
+}

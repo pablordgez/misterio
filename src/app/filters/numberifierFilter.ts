@@ -1,6 +1,11 @@
 export class NumberifierFilter implements Filter {
     private state: number = 1;
     private alphabet: string = 'abcdefghijklmnopqrstuvwxyz';
+    private validStates: Record<number, string>;
+
+    constructor(private states: Record<number, string>){
+        this.validStates = { ...states };
+    }
 
     setState(state: number){
         this.state = Number(state);
@@ -44,4 +49,13 @@ export class NumberifierFilter implements Filter {
     }
     return outputText;
   }
+
+  randomizeConfiguration(): void {
+    this.setState(Math.floor(Math.random() * Object.keys(this.validStates).length));
+  }
+
+  toString(): string {
+    return "Numberifier: " + this.validStates[this.state] + "\n";
+  }
+
 }
