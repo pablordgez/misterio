@@ -10,7 +10,7 @@ This functionality however is far from the final objective, which you can check 
 
 ## TODO
 - Add game logic (you can check your answer n number of times, or give up and show the answer)
-- Design the UI (the current UI is just plain HTML)
+- Design the UI (the current UI is very basic)
 - Add a how to play section, explaining the game and what each part of the machine does
 - Add difficulty levels
 - Ability to share machines
